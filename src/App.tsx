@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 const Wrapper = styled.div`
@@ -18,22 +18,15 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVars = {
-  hover: { scale: 1.5, rotateZ: 90 },
-  click: { scale: 1, borderRadius: "100px" },
-};
-
 function App() {
   /* ref : 특정 요소를 잡을 수 있는 방법 */
 
   const x = useMotionValue(0);
-
-  // console.log(x);
+  const scale = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
 
   return (
     <Wrapper>
-      <button onClick={() => x.set(200)}> Click me </button>
-      <Box style={{ x }} drag="x" dragSnapToOrigin />
+      <Box style={{ x, scale }} drag="x" dragSnapToOrigin />
 
       {/* <Box
         whileHover={{ scale: 1.5, rotateZ: 90 }}
