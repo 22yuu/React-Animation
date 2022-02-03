@@ -41,9 +41,9 @@ function App() {
       <BiggerBox ref={biggerBoxRef}>
         <Box
           drag
-          dragSnapToOrigin
-          dragElastic={0.5}
-          dragConstraints={biggerBoxRef}
+          dragSnapToOrigin // true인 경우 드래그 가능한 요소는 놓을 때 중심/원점으로 다시 애니메이션됨
+          dragElastic={0.5} // 제한된 바깥을 벗어날 수 있는 이동 정도
+          dragConstraints={biggerBoxRef} // 허용된 드래그 가능 영역에 제약 조건을 적용함.
           variants={boxVars}
           whileHover="hover"
           whileDrag="drag"
