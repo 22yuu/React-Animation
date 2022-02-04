@@ -8,6 +8,7 @@ const Wrapper = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 `;
 
 const Box = styled(motion.div)`
@@ -17,43 +18,60 @@ const Box = styled(motion.div)`
   border-radius: 40px;
   position: absolute;
   top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVariants = {
-  initial: {
-    opacity: 0,
-    sacle: 0,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    rotateZ: 360,
-  },
-  leaving: {
+const box = {
+  invisible: {
+    x: 500,
     opacity: 0,
     scale: 0,
-    y: 50,
+  },
+  visible: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 1,
+    },
+  },
+  exit: {
+    x: -500,
+    opacity: 0,
+    rotateX: 180,
+    transition: {
+      duration: 1,
+    },
   },
 };
 
 function App() {
-  const [showing, setShowing] = useState(false);
-  const toggleShowing = () => setShowing((prev) => !prev);
+  const [visible, setVisible] = useState(1);
+  const nextPlease = () => setVisible((prev) => (prev === 10 ? 10 : prev + 1));
+  const prevPlease = () => setVisible((prev) => (prev === 1 ? 1 : prev - 1));
   return (
     <Wrapper>
-      <button onClick={toggleShowing}>Click</button>
-      {/* AnimatePresence는 안쪽에 나타나거나 사라지는게 있다면 그것을 animate 할 수 있게 해줌  */}
       <AnimatePresence>
-        {showing ? (
-          <Box
-            variants={boxVariants}
-            initial="initial"
-            animate="visible"
-            exit="leaving" // 해당 요소가 사라질 때 적용되는 스타일
-          />
-        ) : null}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
+          i == visible ? (
+            <Box
+              variants={box}
+              initial="invisible"
+              animate="visible"
+              exit="exit"
+              key={i}
+            >
+              {i}
+            </Box>
+          ) : null
+        )}
       </AnimatePresence>
+      <button onClick={nextPlease}>next</button>
+      <button onClick={prevPlease}>prev</button>
     </Wrapper>
   );
 }
