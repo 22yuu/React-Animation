@@ -26,12 +26,12 @@ const Box = styled(motion.div)`
 `;
 
 const box = {
-  invisible: {
-    x: 500,
+  entry: (back: boolean) => ({
+    x: back ? -500 : 500,
     opacity: 0,
     scale: 0,
-  },
-  visible: {
+  }),
+  center: {
     x: 0,
     opacity: 1,
     scale: 1,
@@ -39,36 +39,41 @@ const box = {
       duration: 1,
     },
   },
-  exit: {
-    x: -500,
+  exit: (back: boolean) => ({
+    x: back ? 500 : -500,
     opacity: 0,
     rotateX: 180,
     transition: {
       duration: 1,
     },
-  },
+  }),
 };
 
 function App() {
   const [visible, setVisible] = useState(1);
-  const nextPlease = () => setVisible((prev) => (prev === 10 ? 10 : prev + 1));
-  const prevPlease = () => setVisible((prev) => (prev === 1 ? 1 : prev - 1));
+  const [back, setBack] = useState(false);
+  const nextPlease = () => {
+    setBack(false);
+    setVisible((prev) => (prev === 10 ? 10 : prev + 1));
+  };
+  const prevPlease = () => {
+    setBack(true);
+    setVisible((prev) => (prev === 1 ? 1 : prev - 1));
+  };
   return (
     <Wrapper>
-      <AnimatePresence>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
-          i == visible ? (
-            <Box
-              variants={box}
-              initial="invisible"
-              animate="visible"
-              exit="exit"
-              key={i}
-            >
-              {i}
-            </Box>
-          ) : null
-        )}
+      <AnimatePresence custom={back}>
+        i == visible ? (
+        <Box
+          custom={back}
+          variants={box}
+          initial="entry"
+          animate="center"
+          exit="exit"
+          key={visible} // React js에서 각 요소는  key를 가져야함 key 값이 변경이 되면 이전 요소가 사라지고 새롭게 생긴 것으로 인식한다.
+        >
+          {visible}
+        </Box>
       </AnimatePresence>
       <button onClick={nextPlease}>next</button>
       <button onClick={prevPlease}>prev</button>
